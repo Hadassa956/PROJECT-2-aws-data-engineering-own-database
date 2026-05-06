@@ -1,0 +1,25 @@
+# =========================
+# 1. Data
+# =========================
+*.csv
+*.parquet
+*.json
+*.log
+
+
+# =========================
+# 2. Terraform
+# =========================
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+
+# =========================
+# 3. Python and Environments
+# =========================
+__pycache__/
+*.py[cod]
+.terraform-bootstrap
+.transporter
