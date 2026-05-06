@@ -44,3 +44,40 @@ The Terraform configuration follows modular best practices, separating variables
 ├── providers.tf               # AWS provider configurations and required Terraform versions
 ├── variables.tf               # Input variables for Terraform, making the infrastructure highly reusable
 └── README.md                  # Comprehensive project documentation
+
+
+1 . Backend Initialization (Bootstrap):
+First, provision the S3 bucket and DynamoDB table required for the remote backend.
+
+Bash
+terraform init
+terraform apply -target=aws_s3_bucket.terraform_state -target=aws_dynamodb_table.terraform_locks
+
+2. Main Infrastructure Provisioning:
+Once the backend is configured, initialize and apply the main configurations.
+
+Bash
+terraform init
+terraform apply
+
+3. Data Ingestion:
+Generate the raw data and upload it to the AWS environment.
+
+Bash
+python data_generator.py
+python ingestion_s3.py
+
+4. ETL Processing:
+Trigger the AWS Glue Job to process the data via the AWS CLI.
+
+Bash
+aws glue start-job-run --job-name job-customers-transformation --region us-east-1
+
+5. Data Cataloging:
+Once the job succeeds, run the Crawler to populate the Data Catalog.
+
+Bash
+aws glue start-crawler --name crawler-clientes-curated --region us-east-1
+
+6. Querying:
+Access the Amazon Athena console to execute SQL queries against the newly created database and validated Parquet files.
