@@ -28,11 +28,19 @@ Every technology in this pipeline was selected based on scalability, cost-effici
 
 ## Repository Structure
 ```text
+The Terraform configuration follows modular best practices, separating variables, providers, and outputs into distinct files for maintainability.
+```text
 .
-├── bootstrap.tf           # Terraform configuration for the remote backend (S3 state & DynamoDB lock)
-├── glue.tf                # Terraform configuration for the main infrastructure (S3, Glue, IAM roles)
-├── data_generator.py      # Python script to generate synthetic customer dataset
-├── ingestion_s3.py        # Python script (boto3) to upload local raw data to the S3 Landing Zone
-├── etl_script.py          # PySpark script executed by the AWS Glue Job for data transformation
-├── .gitignore             # Version control exclusions (secures data files, tfstate, and virtual environments)
-└── README.md              # Project documentation
+├── terraform-bootstrap/       # Directory containing infrastructure code for the remote backend (S3 & DynamoDB)
+├── .gitignore                 # Version control exclusions to protect data and sensitive state files
+├── .terraform.lock.hcl        # Terraform dependency lock file ensuring provider version consistency
+├── backend.tf                 # Configures Terraform to utilize the remote backend (State Lock)
+├── data_generator.py          # Python script to generate the synthetic customer dataset
+├── etl_script.py              # PySpark script executed by the AWS Glue Job for data transformation
+├── glue.tf                    # Specific Terraform configurations for AWS Glue (Jobs, Crawlers)
+├── ingestion_s3.py            # Python script utilizing boto3 to upload raw data to the S3 Landing Zone
+├── main.tf                    # Primary Terraform configuration for core resources (Data Lake buckets, IAM roles)
+├── outputs.tf                 # Defines infrastructure outputs (e.g., generated bucket names, IAM role ARNs)
+├── providers.tf               # AWS provider configurations and required Terraform versions
+├── variables.tf               # Input variables for Terraform, making the infrastructure highly reusable
+└── README.md                  # Comprehensive project documentation
